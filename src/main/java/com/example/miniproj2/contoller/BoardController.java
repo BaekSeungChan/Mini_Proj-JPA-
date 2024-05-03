@@ -1,5 +1,6 @@
 package com.example.miniproj2.contoller;
 
+import com.example.miniproj2.dto.BoardSearchDTO;
 import com.example.miniproj2.entity.Board;
 import com.example.miniproj2.repository.BoardRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/board")
@@ -23,13 +26,28 @@ public class BoardController {
     private final BoardRepository boardRepository;
 
     @GetMapping("/list")
-    public String list(Model model){
-//        List<Board> bords = boardRepository.findAll();
+    public String list(Model model, BoardSearchDTO boardSearchDTO) {
 
-        model.addAttribute("list", boardRepository.findAllByOrderByIdDesc());
+        List<Board> searchResult;
+
+        if (boardSearchDTO.getId() != null) {
+            searchResult = Collections.singletonList(boardRepository.findById(boardSearchDTO.getId()).orElse(null));
+        } else if (boardSearchDTO.getTitle() != null && !boardSearchDTO.getTitle().isEmpty()) {
+            searchResult = boardRepository.findAllByTitleContaining(boardSearchDTO.getTitle());
+        } else if (boardSearchDTO.getContent() != null && !boardSearchDTO.getContent().isEmpty()) {
+            searchResult = boardRepository.findAllByContentContaining(boardSearchDTO.getContent());
+        } else if (boardSearchDTO.getWriter() != null && !boardSearchDTO.getWriter().isEmpty()) {
+            searchResult = boardRepository.findAllByWriterContaining(boardSearchDTO.getWriter());
+        } else {
+            searchResult = boardRepository.findAllByOrderByIdDesc();
+        }
+
+
+        model.addAttribute("list", searchResult);
 
         return "/board/list";
     }
+
 
     @GetMapping("/detail")
     public String detail(@RequestParam("id") Long id, Model model){

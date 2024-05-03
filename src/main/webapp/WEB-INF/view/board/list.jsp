@@ -14,6 +14,66 @@
             </div>
         </div>
 
+    <%-- 복합 검색을 위한 아코디언 검색창   --%>
+    <div class="row mt-4">
+        <div class="col-md-10 offset-md-1">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <a class="btn" data-bs-toggle="collapse" href="#collapse-body">검색 도구 상자</a>
+                </div>
+                <div class="collapse show" id="collapse-body">
+                    <div class="card-body">
+                        <form method="get" class="search-form" action="/board/list">
+                                <%--   번호 검색    --%>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input name="id" class="form-control" type="text" placeholder="번호">
+                                        <label class="form-label text-secondary">번호</label>
+                                    </div>
+                                </div>
+                            </div>
+                                <%--   작성자 검색    --%>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input name="writer" class="form-control" type="text" placeholder="작성자">
+                                        <label class="form-label text-secondary">작성자</label>
+                                    </div>
+                                </div>
+                            </div>
+                                <%--   제목 검색    --%>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input name="title" class="form-control" type="text" placeholder="제목">
+                                        <label class="form-label text-secondary">제목</label>
+                                    </div>
+                                </div>
+                            </div>
+                                <%--   내용 검색    --%>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input name="content" class="form-control" type="text" placeholder="내용">
+                                        <label class="form-label text-secondary">내용</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col text-end">
+                                    <input type="reset" class="btn btn-warning btn-lg" value="초기화">
+                                    <a href="/board/list" class="btn btn-secondary btn-lg">목록</a>
+                                    <button type="submit" class="btn btn-success btn-lg">검색</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <%--게시글 개수 및 글쓰기 버튼--%>
     <div class="row mt-4">
         <div class="col-md-10 offset-md-1">
