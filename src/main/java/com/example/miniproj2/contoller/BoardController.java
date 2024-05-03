@@ -47,17 +47,7 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public String write(
-            @RequestParam("writer") String writer,
-            @RequestParam("title") String title,
-            @RequestParam("content") String content
-
-    ){
-        Board board = Board.builder()
-                .writer(writer)
-                .title(title)
-                .content(content)
-                .build();
+    public String write(Board board){
 
         Board result = boardRepository.save(board);
 
