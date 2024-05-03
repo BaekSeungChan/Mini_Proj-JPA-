@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -15,14 +15,14 @@ spring:
   # JSP
   mvc:
     view:
-      prefix: /WEB-INF/views/
+      prefix: /WEB-INF/view/
       suffix: .jsp
 
 # server
 server:
-  port: 8888
+  port: 8889
   servlet:
-    context-path: /
+#    context-path: / ?? root ?? ??
     jsp:
       init-parameters:
         development: true
