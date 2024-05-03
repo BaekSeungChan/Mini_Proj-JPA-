@@ -21,9 +21,9 @@ public class BoardController {
 
     @GetMapping("/list")
     public String list(Model model){
-        List<Board> bords =boardRepository.findAll();
+//        List<Board> bords = boardRepository.findAll();
 
-        model.addAttribute("list", bords);
+        model.addAttribute("list", boardRepository.findAllByOrderByIdDesc());
 
         return "/board/list";
     }
@@ -31,6 +31,10 @@ public class BoardController {
     @GetMapping("/detail")
     public String detail(@RequestParam("id") Long id, Model model){
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id가 존재하지 않습니다."));
+
+        // 조회수 증가
+        board.setReadCount(board.getReadCount()+1);
+        Board result = boardRepository.save(board);
 
         model.addAttribute("board", board);
 
