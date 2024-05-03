@@ -1,0 +1,47 @@
+spiring:
+  #database
+  datasource:
+    url: "jdbc:mariadb://localhost:3306/mini_proj"
+    username: "root"
+    password: "Qortmdcks95"
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  #JPA
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  # JSP
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+# server
+server:
+  port: 8888
+  servlet:
+    context-path: /
+    jsp:
+      init-parameters:
+        development: true
+
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans, mappings, env
+
+
+logging:
+  level:
+    #    com.zaxxer: trace
+    org.hibernate.SQL: debug
+    #    org.hibernate.orm.jdbc.bind: trace  # 3.x ??
+    #    org.hibernate.type: trace  # 2.x
+
