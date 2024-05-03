@@ -1,17 +1,51 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 
-<html>
-<head>
-    <title>게시글 작성</title>
-</head>
-<body>
-<h1>게시글 작성</h1>
-<form method="post" action="/board/write" >
-    <input type="text" name="writer" placeholder="작성자" required> <br><br>
-    <input type="text" name="title" placeholder="제목" required> <br><br>
-    <textarea name="content" placeholder="내용" rows="5" cols="60"></textarea> <br><br>
-    <button type="submit">등록</button>
-</form>
-</body>
-</html>
+
+
+
+<jsp:include page="/WEB-INF/view/board/header.jsp"></jsp:include>
+
+<div class="container-fluid">
+    <div class="col-md-10 offset-md-1">
+        <h1>게시글 작성</h1>
+        <p>
+            글은 자신의 인격입니다.
+        </p>
+    </div>
+
+    <form method="post">
+        <div class="row mt-4">
+            <div class="col-md-10 offset-md-1">
+                <div class="form-floating">
+                    <input type="text" name="writer" class="form-control" placeholder="작성자" required>
+                    <label class="form-label text-secondary">작성자</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-10 offset-md-1">
+                <div class="form-floating">
+                    <input type="text" name="title" class="form-control" placeholder="제목" required>
+                    <label class="form-label text-secondary">제목</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-10 offset-md-1">
+                <textarea name="content" class="form-control" rows="15" placeholder="내용 작성" required></textarea>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-10 offset-md-1 text-end">
+                <a href="/board/list" type="button" class="btn btn-secondary btn-lg">목록</a>
+                <button type="submit" class="btn btn-primary btn-lg">등록</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<jsp:include page="/WEB-INF/view/board/footer.jsp"></jsp:include>

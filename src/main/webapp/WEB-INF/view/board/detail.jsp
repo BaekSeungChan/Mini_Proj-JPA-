@@ -34,7 +34,7 @@
 
     <div class="row mt-4" style="min-height: 350px">
         <div class="col-md-10 offset-md-1">
-            <pre>게시글 내용이 표시되는 자리입니다.</pre>
+            <pre>${board.content}</pre>
         </div>
     </div>
 
