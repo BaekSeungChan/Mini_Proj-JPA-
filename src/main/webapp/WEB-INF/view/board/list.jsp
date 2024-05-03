@@ -22,7 +22,7 @@
                     (1/275)
                 </div>
                 <div class="col text-end">
-                    <button type="button" class="btn btn-primary">글쓰기</button>
+                    <a href="/board/write" class="btn btn-primary">글쓰기</a>
                 </div>
             </div>
         </div>
