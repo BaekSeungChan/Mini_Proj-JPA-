@@ -6,6 +6,12 @@ import com.example.miniproj2.repository.BoardRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,27 +32,43 @@ public class BoardController {
     private final BoardRepository boardRepository;
 
     @GetMapping("/list")
-    public String list(Model model, BoardSearchDTO boardSearchDTO) {
+    public String list(Model model, BoardSearchDTO boardSearchDTO,
+                       @PageableDefault(page = 0, size = 10)
+                       @SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<Board> searchResult;
+        Page<Board> searchResultPage;
 
         if (boardSearchDTO.getId() != null) {
-            searchResult = Collections.singletonList(boardRepository.findById(boardSearchDTO.getId()).orElse(null));
+            // id로 게시물을 찾습니다.
+            Board board = boardRepository.findById(boardSearchDTO.getId()).orElse(null);
+            // 검색 결과가 존재하면 페이지로 변환하여 모델에 추가합니다.
+            if (board != null) {
+                searchResultPage = new PageImpl<>(Collections.singletonList(board));
+            } else {
+                // 검색 결과가 없으면 빈 페이지를 생성합니다.
+                searchResultPage = Page.empty();
+            }
         } else if (boardSearchDTO.getTitle() != null && !boardSearchDTO.getTitle().isEmpty()) {
-            searchResult = boardRepository.findAllByTitleContaining(boardSearchDTO.getTitle());
+            // 제목으로 게시물을 검색합니다.
+            searchResultPage = boardRepository.findAllByTitleContaining(boardSearchDTO.getTitle(), pageable);
         } else if (boardSearchDTO.getContent() != null && !boardSearchDTO.getContent().isEmpty()) {
-            searchResult = boardRepository.findAllByContentContaining(boardSearchDTO.getContent());
+            // 내용으로 게시물을 검색합니다.
+            searchResultPage = boardRepository.findAllByContentContaining(boardSearchDTO.getContent(), pageable);
         } else if (boardSearchDTO.getWriter() != null && !boardSearchDTO.getWriter().isEmpty()) {
-            searchResult = boardRepository.findAllByWriterContaining(boardSearchDTO.getWriter());
+            // 작성자로 게시물을 검색합니다.
+            searchResultPage = boardRepository.findAllByWriterContaining(boardSearchDTO.getWriter(), pageable);
         } else {
-            searchResult = boardRepository.findAllByOrderByIdDesc();
+            // 검색 조건이 없는 경우 모든 게시물을 페이지로 가져옵니다.
+            searchResultPage = boardRepository.findAll(pageable);
         }
 
-
-        model.addAttribute("list", searchResult);
+        // 페이지 정보와 검색 결과를 모델에 추가합니다.
+        model.addAttribute("page", searchResultPage);
+        model.addAttribute("list", searchResultPage.getContent());
 
         return "/board/list";
     }
+
 
 
     @GetMapping("/detail")
