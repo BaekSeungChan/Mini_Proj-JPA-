@@ -4,6 +4,9 @@
 
 <jsp:include page="/WEB-INF/view/board/header.jsp"></jsp:include>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/lightpick@1.6.2/css/lightpick.css">
+
+
     <%--   제목    --%>
         <div class="row mt-4">
             <div class="col-md-10 offset-md-1">
@@ -13,6 +16,7 @@
                 </p>
             </div>
         </div>
+
 
     <%-- 복합 검색을 위한 아코디언 검색창   --%>
     <div class="row mt-4">
@@ -79,7 +83,7 @@
         <div class="col-md-10 offset-md-1">
             <div class="row">
                 <div class="col text-start">
-                    (1/275)
+                    (${pagination.current}/${pagination.total})
                 </div>
                 <div class="col text-end">
                     <a href="/board/write" class="btn btn-primary">글쓰기</a>
@@ -127,20 +131,59 @@
     <div class="row mt-4">
         <div class="col-md-10 offset-md-1">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                <li class="page-item"><a class="page-link" href="#">&lt;</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item"><a class="page-link" href="#">6</a></li>
-                <li class="page-item"><a class="page-link" href="#">7</a></li>
-                <li class="page-item"><a class="page-link" href="#">8</a></li>
-                <li class="page-item"><a class="page-link" href="#">9</a></li>
-                <li class="page-item"><a class="page-link" href="#">10</a></li>
-                <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
-                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+
+                <!-- 처음이 있을 경우만 링크 설정 -->
+                <c:choose>
+                    <c:when test="${pagination.hasFirstBlock()}">
+                        <li class="page-item"><a class="page-link" href="#" data-page="${pagination.getFirst()}">&laquo;</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a class="page-link disabled" href="#">&laquo;</a></li>
+                    </c:otherwise>
+                </c:choose>
+
+                <!-- 이전이 있을 경우만 링크 설정 -->
+                <c:choose>
+                    <c:when test="${pagination.hasPreviousBlock()}">
+                        <li class="page-item"><a class="page-link" href="#" data-page="${pagination.getPrevious()}">&lt;</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a class="page-link disabled" href="#">&lt;</a></li>
+                    </c:otherwise>
+                </c:choose>
+
+                <!-- begin부터 end까지 표시(보여줄 땐 p, 이동할 땐 p-1) -->
+                <c:forEach var="p" begin="${pagination.begin}" end="${pagination.end}">
+                    <c:choose>
+                        <c:when test="${p == pagination.current}">
+                            <li class="page-item active"><a class="page-link" href="#">${p}</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item"><a class="page-link" href="#" data-page="${p-1}">${p}</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
+                <!-- 다음이 있을 경우만 링크 설정 -->
+                <c:choose>
+                    <c:when test="${pagination.hasNextBlock()}">
+                        <li class="page-item"><a class="page-link" href="#" data-page="${pagination.getNext()}">&gt;</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a class="page-link disabled" href="#">&gt;</a></li>
+                    </c:otherwise>
+                </c:choose>
+
+                <!-- 마지막이 아닐 경우만 링크 설정 -->
+                <c:choose>
+                    <c:when test="${pagination.hasLastBlock()}">
+                        <li class="page-item"><a class="page-link" href="#" data-page="${pagination.getLast()}">&raquo;</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a class="page-link disabled" href="#">&raquo;</a></li>
+                    </c:otherwise>
+                </c:choose>
+
             </ul>
         </div>
     </div>
@@ -167,5 +210,22 @@
             </form>
         </div>
     </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightpick@1.6.2/lightpick.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(".page-link").click(function(e){
+        e.preventDefault();//기본 클릭 이벤트 제거
+
+        const page = $(this).data("page");
+        if(!$.isNumeric(page)) return;
+
+        //.search-form에 추가하여 전송
+        $("<input>").attr("name", "page").attr("type", "hidden").val(page).appendTo(".search-form");
+        $(".search-form").submit();
+    });
+</script>
+
 
 <jsp:include page="/WEB-INF/view/board/footer.jsp"></jsp:include>

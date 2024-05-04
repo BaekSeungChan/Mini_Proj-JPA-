@@ -1,5 +1,6 @@
 package com.example.miniproj2.contoller;
 
+import com.example.miniproj2.dto.BoardPaginationDTO;
 import com.example.miniproj2.dto.BoardSearchDTO;
 import com.example.miniproj2.entity.Board;
 import com.example.miniproj2.repository.BoardRepository;
@@ -63,7 +64,7 @@ public class BoardController {
         }
 
         // 페이지 정보와 검색 결과를 모델에 추가합니다.
-        model.addAttribute("page", searchResultPage);
+        model.addAttribute("pagination", new BoardPaginationDTO(searchResultPage));
         model.addAttribute("list", searchResultPage.getContent());
 
         return "/board/list";
